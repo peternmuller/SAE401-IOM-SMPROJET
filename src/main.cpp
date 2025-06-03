@@ -21,6 +21,8 @@ uint16_t people_counter = 0;
 uint16_t entrance_counter = 0;
 uint16_t exit_counter = 0;
 
+BLEAdvertising *advertising;
+
 void advertiseCounters() {
   BLEAdvertisementData advdata;
   std::string counterData = "";
@@ -35,16 +37,15 @@ void advertiseCounters() {
   counterData += char(exit_counter & 0xFF);
   counterData += char((exit_counter >> 8) & 0xFF);
   advdata.addData(counterData);
-
-  BLEAdvertising *advertising = BLEDevice::getAdvertising();
   advertising->setAdvertisementData(advdata);
-  advertising->start();
 }
 
 void setup() {
   Serial.begin(115200);
   delay(1000);
   BLEDevice::init("peter");
+  advertising = BLEDevice::getAdvertising();
+  advertising->start();
   advertiseCounters();
 }
 
